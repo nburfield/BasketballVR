@@ -12,6 +12,16 @@ public class Basket : MonoBehaviour {
     public List<Rigidbody> basketballs;
     private List<Vector3> initPositions;
 
+	public Material lineMaterial;
+	int maxPoints = 500;
+	Rigidbody ballPrefab;
+	float force = 16.0f;
+	
+	private int pathIndex = 0;
+	private Vector3[] pathPoints;
+	private bool running = false;
+	private Transform thisTransform;
+
 	// Use this for initialization
 	void Start () {
         firstHit = false;
@@ -22,6 +32,8 @@ public class Basket : MonoBehaviour {
         {
             initPositions.Add(new Vector3(ball.position.x, ball.position.y, ball.position.z));
         }
+
+		pathPoints = new Vector3[maxPoints];
     }
 	
 	// Update is called once per frame
@@ -55,13 +67,14 @@ public class Basket : MonoBehaviour {
                 selectedBall.AddForce(force*6000, ForceMode.Impulse);
                 selectedBall.AddTorque(-Camera.main.transform.right * 100000000, ForceMode.Impulse);
                 selectedBall.useGravity = true;
+				thisTransform = Transform.Instantiate(selectedBall.transform);
+				running = true;
                 selectedBall = null;
             }
         }
 
         if(Input.GetKeyDown(KeyCode.R))
         {
-            Debug.LogError("Called");
             for(int i = 0; i < basketballs.Count; i++)
             {
                 Rigidbody ball = basketballs[i];
@@ -77,7 +90,29 @@ public class Basket : MonoBehaviour {
         {
             selectedBall.MovePosition(Camera.main.transform.position + (Camera.main.transform.forward * 5));
         }
+
+		if(running)
+		{
+				pathPoints [pathIndex] = thisTransform.position;
+				if (++pathIndex == maxPoints) {
+					running = false;
+				}
+				// yield return new WaitForSeconds (0.05);
+				Debug.LogError(thisTransform.position);
+				UnityEditor.Handles.DrawBezier (thisTransform.position, 
+				                                Vector3.zero, 
+				                                Vector3.up, 
+				                                -Vector3.up,
+				                                Color.red, 
+				                                null,
+				                                10);
+
+		}
     }
+
+	void SamplePoints (Transform thisTransform) {
+
+	}
 
     void OnTriggerEnter(Collider name)
     {
