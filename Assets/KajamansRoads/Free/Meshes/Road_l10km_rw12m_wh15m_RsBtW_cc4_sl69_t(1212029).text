@@ -1,0 +1,23 @@
+C:/Prog/Unity5/Generation01/Assets/KajamansRoads/Free/Meshes/Road_l10km_rw12m_wh15m_RsBtW_cc4_sl69_t(1212029).text
+RoadWidth = 12.00
+ShoulderWidth = 0.00
+BankingWidth = 4.00
+BankingUp = 2.00
+TerrainWidth = 0.00
+WallHeight = 15.00
+MaxHeightSpread = 10.00
+BankingCoef = 0.00
+SegmentLengthCoef = 0.70
+RequestedLength = 10000.00
+CenteringCoef = 4.00
+TurnRandomPoint = 12.2000 , 12.2000
+TurnRandomDir = 0.00
+TurnRandomDT = 0.03000
+HeightRandomPoint = 12.5000 , 12.5000
+HeightRandomDir = 90.00
+HeightRandomDT = 0.00100
+MetersPerRoadTexture = 12.00
+MetersPerShoulderTexture = 4.00
+MetersPerBankTexture = 4.00
+MetersPerTerrainTexture = 4.00
+MetersPerWallTexture = 60.00
