@@ -20,7 +20,6 @@ public class Basket : MonoBehaviour {
 	private int pathIndex = 0;
 	private Vector3[] pathPoints;
 	private bool running = false;
-	private Transform thisTransform;
 
 	// Use this for initialization
 	void Start () {
@@ -40,37 +39,7 @@ public class Basket : MonoBehaviour {
 	void Update () {
         if (Input.GetMouseButtonDown(0))
         {
-            if (selectedBall == null)
-            {
-                RaycastHit hit;
-                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-                if (Physics.Raycast(ray, out hit))
-                {
-                    if (hit.collider.tag == "Basketball")
-                    {
-                        selectedBall = hit.collider.GetComponent<Rigidbody>();
-                        //hit.collider.GetComponent<Transform>().Translate(Camera.main.transform.position + (Camera.main.transform.forward * 5));
-                        selectedBall.MovePosition(Camera.main.transform.position + (Camera.main.transform.forward * 5));
-                        selectedBall.velocity = Vector3.zero;
-                        selectedBall.angularVelocity = Vector3.zero;
-                        selectedBall.rotation = Quaternion.identity;
-                        selectedBall.useGravity = false;
-                    }
-                }
-            }
-            else
-            {
-                Vector3 angles = Camera.main.transform.forward;
-                Vector3 force = new Vector3(2.24f * angles.x, 8.24f * angles.y, 2.24f * angles.z);
-                
-                selectedBall.AddForce(force*6000, ForceMode.Impulse);
-                selectedBall.AddTorque(-Camera.main.transform.right * 100000000, ForceMode.Impulse);
-                selectedBall.useGravity = true;
-				thisTransform = Transform.Instantiate(selectedBall.transform);
-				running = true;
-                selectedBall = null;
-            }
         }
 
         if(Input.GetKeyDown(KeyCode.R))
@@ -90,29 +59,8 @@ public class Basket : MonoBehaviour {
         {
             selectedBall.MovePosition(Camera.main.transform.position + (Camera.main.transform.forward * 5));
         }
-
-		if(running)
-		{
-				pathPoints [pathIndex] = thisTransform.position;
-				if (++pathIndex == maxPoints) {
-					running = false;
-				}
-				// yield return new WaitForSeconds (0.05);
-				Debug.LogError(thisTransform.position);
-				UnityEditor.Handles.DrawBezier (thisTransform.position, 
-				                                Vector3.zero, 
-				                                Vector3.up, 
-				                                -Vector3.up,
-				                                Color.red, 
-				                                null,
-				                                10);
-
-		}
     }
 
-	void SamplePoints (Transform thisTransform) {
-
-	}
 
     void OnTriggerEnter(Collider name)
     {

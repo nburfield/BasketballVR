@@ -9841,7 +9841,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 387fdb20b18bea8469e2e21178da96c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceValue: -60000
+  basket: {fileID: 0}
+  pushForce: 5000
+  forceValue: -20000
 --- !u!65 &1823923218
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11689,7 +11691,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 5f603b8c73c81724b9bdc1c65764eb4c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 249.1
+      value: 70.9
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 5f603b8c73c81724b9bdc1c65764eb4c, type: 3}
       propertyPath: m_LocalPosition.z

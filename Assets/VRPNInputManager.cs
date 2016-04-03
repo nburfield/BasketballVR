@@ -27,12 +27,13 @@ public class VRPNInputManager
         //ButtonMap.Add("paint", "WiiMote0[3]"); // A button
         //ButtonMap.Add("rotate", "WiiMote0[16]"); // nunchuck-z button
         //ButtonMap.Add("boost", "WiiMote0[17]"); // nunchuck-c button
+        ButtonMap.Add("B_button", "WiiMote0[4]"); // Home button
 
         //AnalogMap.Add("x", "WiiMote0[21]"); // nunchuck-y
         //AnalogMap.Add("z", "WiiMote0[22]"); // nunchuck-z
 
         SixdofMap.Add("wand", "WiiMote0[0]"); // WiiMote0
-        SixdofMap.Add("view", "ShortGlasses[0]"); // short glasses
+        //SixdofMap.Add("view", "ShortGlasses[0]"); // short glasses
 
         //AnalogMap.Add("accelerator", "WiiMote0[69]");
 
