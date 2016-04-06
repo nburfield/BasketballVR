@@ -41,10 +41,10 @@ vrpn = {
   type = "vrpn";
   input_name = "vrpn";
   buttons = {
-    --"WiiMote0@projector.cse.unr.edu";
+    "WiiMote0@projector.cse.unr.edu";
   };
   analogs = {
-    --"WiiMote0@projector.cse.unr.edu";
+    "WiiMote0@projector.cse.unr.edu";
   };
   sixdofs = {
     "WiiMote0@tracker.rd.unr.edu";

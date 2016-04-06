@@ -26,11 +26,18 @@ public class VRPNInputManager
         //ButtonMap.Add("clear", "WiiMote0[0]"); // Home button
         //ButtonMap.Add("paint", "WiiMote0[3]"); // A button
         //ButtonMap.Add("rotate", "WiiMote0[16]"); // nunchuck-z button
-        //ButtonMap.Add("boost", "WiiMote0[17]"); // nunchuck-c button
-        ButtonMap.Add("B_button", "WiiMote0[4]"); // Home button
+        ButtonMap.Add("A_button", "WiiMote0[3]"); // A button
+        ButtonMap.Add("boost", "WiiMote0[17]"); // nunchuck-c button
+        ButtonMap.Add("reset", "WiiMote0[0]"); // Home button
+        ButtonMap.Add("B_button", "WiiMote0[4]"); // B button
+        ButtonMap.Add("left", "WiiMote0[7]"); // Left Analog
+        ButtonMap.Add("right", "WiiMote0[8]"); // Right Analog
+        ButtonMap.Add("up", "WiiMote0[10]"); // Up Analog
+        ButtonMap.Add("down", "WiiMote0[9]"); // Down Analog
+        ButtonMap.Add("jump", "WiiMote0[16]"); // nunchuck-z button
 
-        //AnalogMap.Add("x", "WiiMote0[21]"); // nunchuck-y
-        //AnalogMap.Add("z", "WiiMote0[22]"); // nunchuck-z
+        AnalogMap.Add("x", "WiiMote0[22]"); // nunchuck-x
+        AnalogMap.Add("y", "WiiMote0[21]"); // nunchuck-y
 
         SixdofMap.Add("wand", "WiiMote0[0]"); // WiiMote0
         //SixdofMap.Add("view", "ShortGlasses[0]"); // short glasses

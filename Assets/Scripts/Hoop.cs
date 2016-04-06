@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Rim : MonoBehaviour {
-
-    public AudioSource audio;
+public class Hoop : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -22,6 +20,7 @@ public class Rim : MonoBehaviour {
 
     void OnCollisionEnter(Collision name)
     {
+        AudioSource audio = GetComponent<AudioSource>();
         audio.volume = Normalize(name.relativeVelocity.magnitude);
         audio.Play();
     }

@@ -3,7 +3,6 @@ using System;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
-
 using NLua;
 
 public class CaVR : MonoBehaviour {

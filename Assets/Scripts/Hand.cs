@@ -3,21 +3,16 @@ using System.Collections;
 
 public class Hand : MonoBehaviour {
 
-    private Rigidbody rb;
-
+    public CaVR cavr;
     public Basket basket;
-
     public float pushForce;
+    public int forceValue;    
 
+    private Rigidbody rb;
     private Vector3 force;
-
     private bool isHold;
-
     private float deltaTime;
-
     private Vector3 currentEulerAngle;
-
-    public int forceValue;
     private VRPNInputManager inputManager;
     private Rigidbody current_ball = null;
 
@@ -40,12 +35,9 @@ public class Hand : MonoBehaviour {
 
     void Update()
     {
-        if (inputManager == null)
-        {
-            var cavr = FindObjectOfType<CaVR>();
-            inputManager = cavr.InputManger;
-        }
-        var sixdof = inputManager.GetSixdofValue("wand");
+        //FindObjectOfType<CaVR>();
+        /*
+        var sixdof = cavr.InputManger.GetSixdofValue("wand");
         var pos = sixdof.Position;
 
         //Debug.LogError("SixDOF Position: " + pos);
@@ -66,6 +58,31 @@ public class Hand : MonoBehaviour {
         //pos.y += 16.57f;
         pos.z += 9.25f;
 
+        Debug.Log(pos);
+        transform.localPosition = pos;
+        transform.localRotation = sixdof.Rotation;
+        */
+
+        if (cavr.InputManger.GetButtonValue("B_button"))
+        {
+            RaycastHit hit;
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.tag == "Basketball")
+                {
+                    current_ball = hit.collider.GetComponent<Rigidbody>();
+                    //hit.collider.GetComponent<Transform>().Translate(Camera.main.transform.position + (Camera.main.transform.forward * 5));
+                    current_ball.MovePosition(Camera.main.transform.position + (Camera.main.transform.forward * 5));
+                    current_ball.velocity = Vector3.zero;
+                    current_ball.angularVelocity = Vector3.zero;
+                    current_ball.rotation = Quaternion.identity;
+                    current_ball.useGravity = false;
+                }
+            }
+        }
+
         //if (Input.GetKeyDown(KeyCode.C) || inputManager.GetButtonValue("B_button"))
         if (Input.GetKeyDown(KeyCode.C) || isHold)
         {
@@ -73,7 +90,7 @@ public class Hand : MonoBehaviour {
             GetComponent<BoxCollider>().enabled = false;
             if(current_ball != null)
             {
-                current_ball.MovePosition(transform.parent.GetComponent<Transform>().position + pos);
+                current_ball.MovePosition(transform.parent.GetComponent<Transform>().position);
                 current_ball.velocity = Vector3.zero;
                 current_ball.angularVelocity = Vector3.zero;
                 current_ball.rotation = Quaternion.identity;
@@ -81,29 +98,13 @@ public class Hand : MonoBehaviour {
             }
             else
             {
-                RaycastHit hit;
-                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-                if (Physics.Raycast(ray, out hit))
-                {
-                    if (hit.collider.tag == "Basketball")
-                    {
-                        current_ball = hit.collider.GetComponent<Rigidbody>();
-                        //hit.collider.GetComponent<Transform>().Translate(Camera.main.transform.position + (Camera.main.transform.forward * 5));
-                        current_ball.MovePosition(Camera.main.transform.position + (Camera.main.transform.forward * 5));
-                        current_ball.velocity = Vector3.zero;
-                        current_ball.angularVelocity = Vector3.zero;
-                        current_ball.rotation = Quaternion.identity;
-                        current_ball.useGravity = false;
-                    }
-                }
             }            
         }
 
 
-        if(Input.GetKeyDown(KeyCode.V) && isHold)
-        {
-            
+        if(cavr.InputManger.GetButtonValue("A_button"))
+        {            
             Vector3 angles = Camera.main.transform.forward;
             Vector3 force = new Vector3(2.24f * angles.x, 10.24f * angles.y, 2.24f * angles.z);
             Debug.LogError("angle is: " + angles);
@@ -113,7 +114,6 @@ public class Hand : MonoBehaviour {
             current_ball = null;
             //GetComponent<BoxCollider>().enabled = true;
             isHold = false;
-
             deltaTime += Time.deltaTime;
         }
 
@@ -121,15 +121,7 @@ public class Hand : MonoBehaviour {
         {
             GetComponent<BoxCollider>().enabled = true;
             deltaTime = 0;
-        }
-        
-
-        //Debug.Log(pos);
-
-        transform.localPosition = pos;//new Vector3(sixdof.Position.x * 6.5f, (sixdof.Position.y - 2.0f) * 6.5f, (sixdof.Position.z - 2.0f) * -6.5f);
-
-        transform.localRotation = sixdof.Rotation;
-
+        }        
     }
 
     void OnTriggerEnter(Collider other)
