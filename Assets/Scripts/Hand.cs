@@ -4,9 +4,10 @@ using System.Collections;
 public class Hand : MonoBehaviour {
 
     public CaVR cavr;
-    public Basket basket;
-    public float pushForce;
-    public int forceValue;    
+    public float throwForce;
+	public float torqueForce;
+    public int bounceForce;
+	public GameObject forcetext;
 
     private Rigidbody rb;
     private Vector3 force;
@@ -28,15 +29,15 @@ public class Hand : MonoBehaviour {
 
         min = 1000f;
         max = -1000f;
-        //forceValue = -30000;
+        //bounceForce = -30000;
         isHold = false;
         deltaTime = 0;
+		forcetext.GetComponent<UnityEngine.UI.Text>().text = throwForce.ToString();
     }
 
     void Update()
     {
         //FindObjectOfType<CaVR>();
-        /*
         var sixdof = cavr.InputManger.GetSixdofValue("wand");
         var pos = sixdof.Position;
 
@@ -51,50 +52,73 @@ public class Hand : MonoBehaviour {
             Debug.LogError("max is: " + max);
         }
 
-        pos.y = 22 * ((pos.y-0.75f) / 1.01f);
+        pos.y = 15 * ((pos.y-0.75f) / 1.01f);
         
 
-        pos.x += -2.11f;
-        //pos.y += 16.57f;
-        pos.z += 9.25f;
+        //pos.x += -2.11f;
+        pos.y += 10.45f;
+        //pos.z += 9.25f;
 
-        Debug.Log(pos);
-        transform.localPosition = pos;
-        transform.localRotation = sixdof.Rotation;
-        */
+        //Debug.LogError(pos);
+		sixdof.Rotation.SetLookRotation (new Vector3(sixdof.Rotation.x + 90.0f, transform.localRotation.y, transform.localRotation.z));
+		transform.localPosition = new Vector3(transform.localPosition.x, pos.y, transform.localPosition.z);
+		//transform.localRotation = sixdof.Rotation;
 
-        if (cavr.InputManger.GetButtonValue("B_button"))
-        {
-            RaycastHit hit;
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		// Find a ball below
+		if (cavr.InputManger.GetButtonValue ("B_button") && !isHold) {
+			RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit))
-            {
-                if (hit.collider.tag == "Basketball")
-                {
-                    current_ball = hit.collider.GetComponent<Rigidbody>();
-                    //hit.collider.GetComponent<Transform>().Translate(Camera.main.transform.position + (Camera.main.transform.forward * 5));
-                    current_ball.MovePosition(Camera.main.transform.position + (Camera.main.transform.forward * 5));
-                    current_ball.velocity = Vector3.zero;
-                    current_ball.angularVelocity = Vector3.zero;
-                    current_ball.rotation = Quaternion.identity;
-                    current_ball.useGravity = false;
-                }
-            }
-        }
+			GameObject lefthand = GameObject.Find ("RightCube");
+			Vector3 positio = lefthand.transform.position;
+			Vector3 dir = lefthand.transform.forward;
+
+			if (Physics.Raycast (positio, dir, out hit, 20)) {
+				if (hit.collider.tag == "Basketball") {
+					current_ball = hit.collider.GetComponent<Rigidbody> ();
+
+					current_ball.velocity = Vector3.zero;
+					current_ball.angularVelocity = Vector3.zero;
+					current_ball.rotation = Quaternion.identity;
+					current_ball.useGravity = true;
+
+					force = new Vector3 (0, bounceForce, 0);
+					current_ball.AddForce (force, ForceMode.Impulse);
+				}
+			}
+		} 
+		else 
+		{
+			deltaTime += Time.deltaTime;
+		}
+
 
         //if (Input.GetKeyDown(KeyCode.C) || inputManager.GetButtonValue("B_button"))
-        if (Input.GetKeyDown(KeyCode.C) || isHold)
-        {
-            isHold = true;
-            GetComponent<BoxCollider>().enabled = false;
+		if(cavr.InputManger.GetButtonValue("B_button") && isHold)
+		{  
+			Vector3 angles = transform.forward;
+			Vector3 force = new Vector3(2.24f * angles.x, 10.24f * angles.y, 2.24f * angles.z);
+			current_ball.AddForce(force * throwForce, ForceMode.Impulse);
+			current_ball.AddTorque(-transform.right * torqueForce, ForceMode.Impulse);
+			current_ball.useGravity = true;
+			current_ball = null;
+			//GetComponent<BoxCollider>().enabled = true;
+			isHold = false;
+			transform.localEulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+		}
+
+		if (cavr.InputManger.GetButtonValue("A_button") || isHold)
+        {            
             if(current_ball != null)
             {
-                current_ball.MovePosition(transform.parent.GetComponent<Transform>().position);
+				isHold = true;
+				GetComponent<BoxCollider>().enabled = false;
+				GameObject righthand = GameObject.Find("RightCube");
+				current_ball.MovePosition(righthand.transform.position + (righthand.transform.forward * 1.5f));
                 current_ball.velocity = Vector3.zero;
                 current_ball.angularVelocity = Vector3.zero;
                 current_ball.rotation = Quaternion.identity;
                 current_ball.useGravity = false;
+				transform.localEulerAngles = new Vector3(-45.0f, 0.0f, 0.0f);
             }
             else
             {
@@ -102,26 +126,23 @@ public class Hand : MonoBehaviour {
             }            
         }
 
+		if(cavr.InputManger.GetButtonValue("increase"))
+		{
+			throwForce += 1000;
+			forcetext.GetComponent<UnityEngine.UI.Text>().text = throwForce.ToString();
+		}
 
-        if(cavr.InputManger.GetButtonValue("A_button"))
-        {            
-            Vector3 angles = Camera.main.transform.forward;
-            Vector3 force = new Vector3(2.24f * angles.x, 10.24f * angles.y, 2.24f * angles.z);
-            Debug.LogError("angle is: " + angles);
-            current_ball.AddForce(force * pushForce, ForceMode.Impulse);
-            current_ball.AddTorque(-Camera.main.transform.right * 100000000, ForceMode.Impulse);
-            current_ball.useGravity = true;
-            current_ball = null;
-            //GetComponent<BoxCollider>().enabled = true;
-            isHold = false;
-            deltaTime += Time.deltaTime;
-        }
+		if(cavr.InputManger.GetButtonValue("decrease"))
+		{
+			throwForce -= 1000;
+			forcetext.GetComponent<UnityEngine.UI.Text>().text = throwForce.ToString();
+		}
 
         if (deltaTime >= 1)
         {
             GetComponent<BoxCollider>().enabled = true;
             deltaTime = 0;
-        }        
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -131,11 +152,12 @@ public class Hand : MonoBehaviour {
         if (other.gameObject.CompareTag("Basketball"))
         {
             currentEulerAngle = transform.rotation.eulerAngles;
-            force = new Vector3(0, forceValue, 0);
+			force = new Vector3(0, bounceForce, 0);
+
             /*
             if ((Mathf.Abs(currentEulerAngle.z % 360) < 90 || Mathf.Abs(currentEulerAngle.z % 360) > 270) && (Mathf.Abs(currentEulerAngle.x % 360) < 90 || Mathf.Abs(currentEulerAngle.x % 360) > 270))
             {
-                force = new Vector3(0, forceValue, 0);
+                force = new Vector3(0, bounceForce, 0);
                 Debug.Log(force);
             }
             else
@@ -158,11 +180,15 @@ public class Hand : MonoBehaviour {
                 {
                     forceX = -1;
                 }
-                force = new Vector3(forceX * forceValue * currentEulerAngle.z / 360, forceValue, forceZ * forceValue * currentEulerAngle.x / 360);
+                force = new Vector3(forceX * bounceForce * currentEulerAngle.z / 360, bounceForce, forceZ * bounceForce * currentEulerAngle.x / 360);
                 Debug.Log(force);
             }
             */
             current_ball = other.GetComponent<Collider>().GetComponent<Rigidbody>();
+			current_ball.velocity = Vector3.zero;
+			current_ball.angularVelocity = Vector3.zero;
+			current_ball.rotation = Quaternion.identity;
+			current_ball.useGravity = true;
             other.GetComponent<Collider>().GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
         }
     }

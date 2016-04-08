@@ -35,6 +35,8 @@ public class VRPNInputManager
         ButtonMap.Add("up", "WiiMote0[10]"); // Up Analog
         ButtonMap.Add("down", "WiiMote0[9]"); // Down Analog
         ButtonMap.Add("jump", "WiiMote0[16]"); // nunchuck-z button
+		ButtonMap.Add("increase", "WiiMote0[6]"); // + button
+		ButtonMap.Add("decrease", "WiiMote0[5]"); // - button
 
         AnalogMap.Add("x", "WiiMote0[22]"); // nunchuck-x
         AnalogMap.Add("y", "WiiMote0[21]"); // nunchuck-y
